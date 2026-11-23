@@ -1,0 +1,77 @@
+{
+  "name": "chat-web",
+  "version": "0.1.2",
+  "description": "基于 DeepSeek API 的聊天前端：纯静态可独立部署（数据存本地），可选自带 Fastify 后端做账号登录与多端同步。",
+  "license": "MIT",
+  "private": true,
+  "author": "AidenX0704",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AidenX0704/chat-web.git"
+  },
+  "homepage": "https://github.com/AidenX0704/chat-web#readme",
+  "bugs": {
+    "url": "https://github.com/AidenX0704/chat-web/issues"
+  },
+  "engines": {
+    "node": ">=22.12"
+  },
+  "keywords": [
+    "deepseek",
+    "chat",
+    "llm",
+    "react",
+    "typescript",
+    "rspack",
+    "fastify",
+    "sqlite",
+    "self-hosted"
+  ],
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "dev:web": "rspack serve -c rspack.config.ts",
+    "dev:server": "pnpm --dir server dev",
+    "dev:static": "BACKEND_ORIGIN=none rspack serve -c rspack.config.ts",
+    "build": "rm -rf dist && NODE_ENV=production rspack build -c rspack.config.ts",
+    "build:static": "rm -rf dist && NODE_ENV=production BACKEND_ORIGIN=none rspack build -c rspack.config.ts",
+    "build:server": "pnpm --dir server build",
+    "test:server": "pnpm --dir server test",
+    "type": "tsc -p tsconfig.json && pnpm --dir server type",
+    "lint": "oxlint src rspack.config.ts",
+    "format": "oxfmt --write ."
+  },
+  "dependencies": {
+    "@types/katex": "^0.16.5",
+    "@types/mdast": "~4.0.3",
+    "@types/prismjs": "^1.26.1",
+    "@types/react": "~18.3.1",
+    "@types/react-dom": "~18.3.0",
+    "clsx": "2.1.1",
+    "fflate": "0.8.3",
+    "idb": "8.0.3",
+    "katex": "0.16.22",
+    "mdast-util-find-and-replace": "3.0.2",
+    "mdast-util-from-markdown": "2.0.3",
+    "mdast-util-gfm": "3.1.0",
+    "mdast-util-math": "3.0.0",
+    "mermaid": "11.10.1",
+    "micromark-extension-gfm": "3.0.0",
+    "micromark-extension-llm-math": "3.1.0",
+    "prismjs": "1.30.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "xlsx": "^0.18.5",
+    "zustand": "4.4.7"
+  },
+  "devDependencies": {
+    "@rspack/cli": "2.0.2",
+    "@rspack/core": "2.0.2",
+    "@rspack/dev-server": "2.0.1",
+    "@swc/helpers": "0.5.23",
+    "@types/node": "~20.9.2",
+    "oxfmt": "0.48.0",
+    "oxlint": "1.63.0",
+    "typescript": "7.0.2"
+  }
+}

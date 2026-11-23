@@ -1,0 +1,123 @@
+# chat-web 本地部署：docker compose up -d --build
+#
+# 组成：
+#   web    nginx 托管前端静态文件，并把 /api 反代给 server（唯一对外端口，默认 8090）
+#   server Fastify 后端，SQLite 与附件都在 chat-data 卷里；只在 chat-net 内监听 8787，不映射到宿主
+#
+# 首次部署前：
+#   cp server/.env.example server/.env    # 填 AUTH_USERNAME / AUTH_PASSWORD / DEEPSEEK_API_KEY
+#   docker compose up -d --build
+# 之后访问 http://localhost:8090
+#
+# 拉不到 Docker Hub（registry-1.docker.io 超时）时，见 README 的「镜像加速」一节，
+# 可配置 daemon 镜像源，或直接覆盖变量：
+#   NODE_IMAGE=docker.m.daocloud.io/library/node:22-bookworm-slim \
+#   NGINX_IMAGE=docker.m.daocloud.io/library/nginx:1.27-alpine \
+#   docker compose up -d --build
+
+# 项目名保持 chat-personal：命名卷（chat-personal_chat-data）跟它绑定，
+# 改名会让已有部署挂到新卷上、看起来像"数据没了"。确认迁移后再改。
+name: chat-personal
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: server
+      args:
+        # 拉不到 Docker Hub 时换成镜像站，例如：
+        #   NODE_IMAGE=docker.m.daocloud.io/library/node:22-bookworm-slim
+        # 可在根目录 .env 里设置，或直接 docker compose build --build-arg 覆盖
+        NODE_IMAGE: ${NODE_IMAGE:-node:22-bookworm-slim}
+        NGINX_IMAGE: ${NGINX_IMAGE:-nginx:1.27-alpine}
+        # 国内网络建议：https://registry.npmmirror.com
+        NPM_REGISTRY: ${NPM_REGISTRY:-}
+        # 装 python3/make/g++ 时用的 Debian 镜像站，境内建议 mirrors.aliyun.com
+        DEBIAN_MIRROR: ${DEBIAN_MIRROR:-}
+    image: chat-web-server:local
+    restart: unless-stopped
+    # 让容器里的 Node 直接收到 SIGTERM（平滑关停 SSE 连接与 SQLite）
+    init: true
+    env_file:
+      # 账号口令与上游 Key 都放这里，不要写进 compose 文件
+      - ./server/.env
+    environment:
+      NODE_ENV: production
+      # 容器内必须监听所有网卡，宿主机只通过 web 反代访问
+      HOST: 0.0.0.0
+      PORT: "8787"
+      # 请求都来自 nginx，要信任 X-Forwarded-For，否则限流按容器网关 IP 统计
+      TRUST_PROXY: "true"
+      DATABASE_PATH: /data/chat-personal.sqlite
+      DATA_DIR: /data/files
+      # 本地 http 访问时 Secure Cookie 下不去；挂到 HTTPS 域名后改成 true
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      # 同源部署不需要跨域白名单
+      CORS_ORIGINS: ""
+    volumes:
+      - chat-data:/data
+    # 只在 compose 内部网络可达：不写 ports，宿主（含公网）永远连不到 8787。
+    # 前端的所有 /api 请求都由 web 容器在内部转发到这里。
+    expose:
+      - "8787"
+    networks:
+      - chat-net
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:8787/api/health').then((r) => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: web
+      args:
+        NODE_IMAGE: ${NODE_IMAGE:-node:22-bookworm-slim}
+        NGINX_IMAGE: ${NGINX_IMAGE:-nginx:1.27-alpine}
+        NPM_REGISTRY: ${NPM_REGISTRY:-}
+        DEBIAN_MIRROR: ${DEBIAN_MIRROR:-}
+    image: chat-web-web:local
+    restart: unless-stopped
+    # 后端健康后再接流量，避免首个请求打到未迁移完的库
+    depends_on:
+      server:
+        condition: service_healthy
+    # 唯一的对外端口：宿主 WEB_PORT（默认 8090）→ 容器内 nginx 的 80
+    # 前面还有宿主 nginx 时把 WEB_BIND 设成 127.0.0.1，端口就只对本机可达
+    ports:
+      - "${WEB_BIND:-0.0.0.0}:${WEB_PORT:-8090}:80"
+    networks:
+      - chat-net
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+
+volumes:
+  # 数据库、附件原件都在这里；备份见 server/README.md
+  chat-data:
+
+networks:
+  # 两个容器之间的专用桥接网络：server 只在这里监听，宿主机没有它的入口
+  chat-net:
+    driver: bridge

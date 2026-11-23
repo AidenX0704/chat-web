@@ -1,0 +1,13 @@
+# 统一换行与二进制识别，避免跨平台提交出现整文件 diff
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.sqlite binary
+
+pnpm-lock.yaml text eol=lf

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" />
+    <title>chat-web</title>
+    <script>
+      /*
+       * 分享页（/s/<token>）是前端路由，服务端会把入口 HTML 原样返回。
+       * 构建产物里的资源用相对路径（publicPath: 'auto'，为了 file:// 下也能打开），
+       * 此时浏览器会按当前地址把 static/js/... 解析成 /s/static/js/...，
+       * 服务端找不到静态文件又回落到 index.html，脚本拿到一段 HTML，
+       * 控制台就报 "Uncaught SyntaxError: Unexpected token '<'"，页面白屏。
+       * 在解析后续 <script>/<link> 之前插入 <base>，把资源根目录钉在站点根上；
+       * file:// 打开时保持相对路径不变。
+       */
+      ;(function () {
+        if (location.protocol === 'file:') {
+          return
+        }
+        var pathname = location.pathname
+        // 去掉 /s/<token> 这一段，得到应用挂载目录（根路径为 /）
+        var base = /\/s\/[A-Za-z0-9_-]+\/?$/.test(pathname)
+          ? pathname.replace(/s\/[A-Za-z0-9_-]+\/?$/, '')
+          : pathname.replace(/[^/]*$/, '')
+        var element = document.createElement('base')
+        element.href = base === '' ? '/' : base
+        document.head.appendChild(element)
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

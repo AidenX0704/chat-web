@@ -1,0 +1,166 @@
+.brand {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  user-select: none;
+  font-family:
+    'SF Pro Display', 'Avenir Next', 'Inter', 'Helvetica Neue', system-ui, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.iconWrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.icon {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 6px rgba(16, 100, 252, 0.22));
+  transition:
+    transform var(--ds-transition-duration) var(--ds-ease-in-out),
+    filter var(--ds-transition-duration) var(--ds-ease-in-out);
+
+  [data-ds-dark-theme] & {
+    filter: drop-shadow(0 2px 10px rgba(33, 153, 254, 0.36));
+  }
+}
+
+.wordmark {
+  display: inline-flex;
+  align-items: baseline;
+  min-width: 0;
+  line-height: 1;
+  letter-spacing: -0.032em;
+  white-space: nowrap;
+  font-feature-settings:
+    'kern' 1,
+    'liga' 1,
+    'ss01' 1;
+}
+
+.wordPrimary {
+  font-weight: 700;
+  background: linear-gradient(180deg, #0b1220 0%, #263451 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+
+  [data-ds-dark-theme] & {
+    background: linear-gradient(180deg, #ffffff 0%, #d4e0f8 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+.wordAccent {
+  font-weight: 600;
+  letter-spacing: -0.028em;
+  background: linear-gradient(112deg, #0544e6 0%, #1064fc 50%, #2199fe 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+
+  [data-ds-dark-theme] & {
+    background: linear-gradient(112deg, #5c98ff 0%, #3ca8ff 52%, #72ceff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+.sider {
+  gap: 8px;
+
+  .icon {
+    height: 19px;
+    transform: translateY(-0.5px);
+  }
+
+  .wordmark {
+    font-size: 18.5px;
+  }
+}
+
+.login {
+  gap: 10px;
+
+  .icon {
+    height: 23px;
+    transform: translateY(-0.5px);
+  }
+
+  .wordmark {
+    font-size: 22px;
+  }
+}
+
+.welcome {
+  gap: 12px;
+
+  .iconWrap::before {
+    content: '';
+    position: absolute;
+    inset: -10px -12px;
+    border-radius: 999px;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(16, 100, 252, 0.2) 0%,
+      rgba(33, 153, 254, 0.08) 48%,
+      transparent 74%
+    );
+    filter: blur(8px);
+    pointer-events: none;
+  }
+
+  [data-ds-dark-theme] & .iconWrap::before {
+    background: radial-gradient(
+      ellipse at center,
+      rgba(33, 153, 254, 0.34) 0%,
+      rgba(16, 100, 252, 0.14) 50%,
+      transparent 76%
+    );
+  }
+
+  .icon {
+    height: 28px;
+    transform: translateY(-1px);
+  }
+
+  .wordmark {
+    font-size: 27px;
+  }
+}
+
+/* 收起侧边栏时只留图标：字标不渲染，图标略微放大一点点 */
+.iconOnly {
+  .wordmark {
+    display: none;
+  }
+
+  .icon {
+    height: 20px;
+  }
+}
+
+@media (max-width: 439px) {
+  .welcome {
+    gap: 10px;
+
+    .icon {
+      height: 22px;
+    }
+
+    .wordmark {
+      font-size: 22px;
+    }
+  }
+}

@@ -1,0 +1,268 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--dsw-alias-bg-base);
+  color: var(--dsw-alias-label-primary);
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid var(--dsw-alias-border-l1);
+  background-color: var(--dsw-alias-bg-base);
+}
+
+.headerInner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 10px 20px;
+}
+
+/* 左上角：logo ｜ 来自分享的对话 */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.divider {
+  flex: none;
+  width: 1px;
+  height: 16px;
+  background-color: var(--dsw-alias-border-l2);
+}
+
+.headerLabel {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--dsw-alias-label-secondary);
+  font-size: 13px;
+  line-height: 20px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.main {
+  flex: 1;
+  width: 100%;
+}
+
+.article {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 28px 20px 8px;
+}
+
+.title {
+  margin: 0 0 6px;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 32px;
+  letter-spacing: -0.01em;
+  word-break: break-word;
+}
+
+.note {
+  margin: 0 0 26px;
+  color: var(--dsw-alias-label-tertiary);
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* 用户提问：右对齐气泡，长文按原换行展示 */
+.userRow {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.bubble {
+  box-sizing: border-box;
+  max-width: min(84%, 560px);
+  padding: 10px 16px;
+  border-radius: 22px;
+  background-color: var(--dsw-specific-bubble);
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.userText {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* 附件只列文件名：原件在服务端私有目录里，分享页不提供下载 */
+.files {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.file {
+  max-width: 100%;
+  overflow: hidden;
+  padding: 2px 8px;
+  border: 1px solid var(--dsw-alias-border-l2);
+  border-radius: 8px;
+  color: var(--dsw-alias-label-secondary);
+  font-size: 12px;
+  line-height: 18px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.assistantRow {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.markdown {
+  font-size: 16px;
+  line-height: 26px;
+}
+
+.empty {
+  margin: 0;
+  color: var(--dsw-alias-label-tertiary);
+  font-size: 14px;
+  line-height: 22px;
+}
+
+
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 88px 20px;
+  color: var(--dsw-alias-label-secondary);
+  font-size: 14px;
+  line-height: 22px;
+  text-align: center;
+}
+
+.stateText {
+  margin: 0;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--dsw-alias-border-l3);
+  border-top-color: var(--dsw-alias-brand-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation-duration: 2.4s;
+  }
+}
+
+@media not all and (min-width: 600px) {
+  .article {
+    padding: 22px 16px 6px;
+  }
+
+  .title {
+    font-size: 20px;
+    line-height: 28px;
+  }
+
+  .bubble {
+    max-width: 88%;
+  }
+}
+
+/* 顶部提示：会话来自分享、内容由 AI 生成，需要自己甄别 */
+.notice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 720px;
+  margin: 18px auto 0;
+  padding: 9px 14px;
+  border-radius: 12px;
+  background-color: var(--dsw-alias-bg-layer-2);
+  color: var(--dsw-alias-label-secondary);
+  font-size: 12px;
+  line-height: 18px;
+
+  svg {
+    flex: none;
+  }
+}
+
+/* 读完分享后回主站继续对话 */
+.cta {
+  display: flex;
+  justify-content: center;
+  margin-top: 36px;
+}
+
+.ctaButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 44px;
+  padding: 10px 24px;
+  border-radius: 999px;
+  background-color: var(--dsw-alias-button-primary-fill);
+  color: var(--dsw-static-neutral-bluish-00);
+  font-size: 15px;
+  line-height: 24px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: opacity var(--ds-transition-duration) var(--ds-ease-in-out);
+
+  &:hover {
+    opacity: 0.88;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dsw-alias-brand-primary);
+    outline-offset: 2px;
+  }
+}
+
+@media not all and (min-width: 600px) {
+  .notice {
+    width: auto;
+    margin: 16px 16px 0;
+  }
+}
