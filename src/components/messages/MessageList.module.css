@@ -1,0 +1,112 @@
+.container {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  scrollbar-gutter: stable both-edges;
+  scrollbar-color: var(--scroll-color) transparent;
+}
+
+.scroll {
+  display: contents;
+}
+
+@media not all and (min-width: 768px) {
+  .container {
+    overflow: hidden;
+    scrollbar-gutter: auto;
+  }
+
+  .scroll {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    scrollbar-color: var(--scroll-color) transparent;
+  }
+}
+
+.column {
+  width: calc(var(--message-list-max-width) - 2 * var(--message-list-padding-horizontal));
+  max-width: calc(100% - 40px);
+  margin: 0 auto;
+  padding-bottom: 24px;
+}
+
+/* 分享前挑消息：每行左侧一个勾选框，未选中的消息整块变淡，正文不再响应鼠标 */
+.selectRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding-right: 8px;
+  border-radius: 16px;
+  outline: none;
+  cursor: pointer;
+  transition: background-color var(--ds-transition-duration) var(--ds-ease-in-out);
+
+  @media (hover: hover) {
+    &:hover {
+      background-color: var(--dsw-alias-interactive-bg-hover);
+    }
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 2px var(--dsw-alias-button-primary-fill);
+  }
+}
+
+.selectCheck {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  width: 16px;
+  height: 16px;
+  margin-top: 6px;
+  border: 1px solid var(--dsw-alias-border-l2);
+  border-radius: 50%;
+  background-color: transparent;
+  color: var(--dsw-alias-label-primary-foreground);
+  transition:
+    background-color var(--ds-transition-duration) var(--ds-ease-in-out),
+    border-color var(--ds-transition-duration) var(--ds-ease-in-out);
+
+  svg {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+.selectCheckChecked {
+  border-color: var(--dsw-alias-button-primary-fill);
+  background-color: var(--dsw-alias-button-primary-fill);
+}
+
+.selectContent {
+  flex: 1;
+  min-width: 0;
+  pointer-events: none;
+  opacity: 0.4;
+  transition: opacity var(--ds-transition-duration) var(--ds-ease-in-out);
+}
+
+.selectRowChecked .selectContent {
+  opacity: 1;
+}
+
+@media not all and (min-width: 768px) {
+  .selectCheck {
+    width: 20px;
+    height: 20px;
+    margin-top: 8px;
+
+    svg {
+      width: 14px;
+      height: 14px;
+    }
+  }
+}

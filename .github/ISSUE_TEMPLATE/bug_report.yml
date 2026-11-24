@@ -1,0 +1,54 @@
+name: Bug report / 问题反馈
+description: 报告一个可复现的问题
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        提交前请先搜索已有 issue。安全问题请走 [SECURITY.md](../blob/main/SECURITY.md)，不要公开披露。
+  - type: dropdown
+    id: mode
+    attributes:
+      label: 部署模式 / Deployment mode
+      options:
+        - 纯静态（在线 Demo / 静态构建）
+        - 自带后端（Docker 或 pnpm dev）
+        - 本地 dist/index.html 直接打开
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: 现象 / What happened
+      description: 实际发生了什么？期望是什么？
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤 / Steps to reproduce
+      placeholder: |
+        1. 打开 ...
+        2. 点击 ...
+        3. 看到 ...
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: 版本 / Version or commit
+      placeholder: v0.1.2 或 commit sha
+  - type: textarea
+    id: env
+    attributes:
+      label: 环境 / Environment
+      placeholder: |
+        浏览器与版本：
+        操作系统：
+        Node / pnpm：
+        是否自建后端：
+  - type: textarea
+    id: logs
+    attributes:
+      label: 日志或截图 / Logs or screenshots
+      render: shell

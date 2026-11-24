@@ -1,0 +1,51 @@
+.description {
+  margin: 0;
+  color: var(--dsw-alias-label-primary);
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.createdDialog {
+  width: 460px;
+}
+
+.copyError {
+  color: var(--dsw-alias-state-error-primary);
+}
+
+.linkRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-sizing: border-box;
+  min-height: var(--ds-control-height-xl);
+  margin-top: 16px;
+  padding: 4px 4px 4px 14px;
+  border: 1px solid var(--dsw-alias-border-l2);
+  border-radius: 22px;
+  background-color: var(--dsw-specific-login-input);
+  transition: border-color var(--ds-transition-duration) var(--ds-ease-in-out);
+
+  &:has(.linkInput:focus) {
+    border-color: var(--dsw-alias-brand-primary);
+  }
+}
+
+.linkInput {
+  flex: 1;
+  min-width: 0;
+  height: var(--ds-control-height-m);
+  padding: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--dsw-alias-label-primary);
+  font: inherit;
+  font-size: 13px;
+  line-height: 20px;
+  text-overflow: ellipsis;
+}
+
+.copyButton {
+  flex-shrink: 0;
+}

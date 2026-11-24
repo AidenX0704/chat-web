@@ -1,0 +1,18 @@
+node_modules/
+dist/
+build/
+.pnpm-store/
+.cache/
+*.log
+.DS_Store
+.env
+.env.*
+!.env.example
+!.env.docker.example
+tmp/
+
+# 后端服务：SQLite 数据库文件与本地数据目录
+server/data/
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm

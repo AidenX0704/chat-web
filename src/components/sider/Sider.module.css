@@ -1,0 +1,672 @@
+.sider {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  width: 261px;
+  height: 100%;
+  padding: 6px 12px 0;
+  border-right: 1px solid var(--dsw-alias-border-l1);
+  background-color: var(--dsw-specific-sidebar-fill);
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  box-sizing: border-box;
+  height: 48px;
+  margin-bottom: 16px;
+  padding: 15px 0 10px 4px;
+  flex-shrink: 0;
+}
+
+.appName {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  overflow: hidden;
+  padding: 4px 6px 4px 4px;
+  border: none;
+  border-radius: 10px;
+  background: none;
+  cursor: pointer;
+  outline: none;
+  transition: opacity var(--ds-transition-duration) var(--ds-ease-in-out);
+
+  &:hover {
+    opacity: 0.88;
+  }
+
+  &:focus-visible {
+    box-shadow: inset 0 0 0 2px var(--dsw-alias-button-primary-fill);
+  }
+}
+
+.topActions {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 2px;
+}
+
+.newChatRow {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 6px;
+}
+
+.newChat {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+  box-sizing: border-box;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 100px;
+  border: 1px solid rgba(103, 158, 254, 0);
+  background: var(--dsw-alias-button-elevated-fill);
+  color: var(--dsw-alias-label-primary);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+  box-shadow:
+    0 -2px 2px rgba(72, 104, 178, 0.04),
+    0 2px 2px rgba(106, 111, 117, 0.09),
+    0 1px 2px rgba(72, 104, 178, 0.08);
+  transition: box-shadow 0.3s ease;
+
+  &:hover {
+    box-shadow:
+      0 4px 4px 0 rgba(72, 104, 178, 0.04),
+      0 -3px 4px 0 rgba(72, 104, 178, 0.04),
+      0 6px 6px 0 rgba(106, 111, 117, 0.1);
+  }
+
+  [data-ds-dark-theme] & {
+    border: none;
+    box-shadow:
+      inset 0 1px 1px rgba(255, 255, 255, 0.1),
+      0 2px 4px rgba(106, 111, 117, 0.08);
+  }
+}
+
+.newChatIcon {
+  display: flex;
+  margin-right: 6px;
+}
+
+.listWrap {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  margin-top: 24px;
+
+  /* 底部渐进模糊过渡遮罩：让会话列表平滑溶入底栏，消除生硬截断感 */
+  &::after {
+    content: '';
+    position: absolute;
+    left: -4px;
+    right: -4px;
+    bottom: 0;
+    height: 44px;
+    z-index: 25;
+    pointer-events: none;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      color-mix(in srgb, var(--dsw-specific-sidebar-fill) 58%, transparent) 55%,
+      var(--dsw-specific-sidebar-fill) 100%
+    );
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    mask-image: linear-gradient(to bottom, transparent 0%, #000 68%, #000 100%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 68%, #000 100%);
+  }
+}
+
+.list {
+  height: 100%;
+  box-sizing: border-box;
+  margin: 0 -2px;
+  padding: 0 2px 42px;
+  overflow-y: auto;
+  /* 配合 ::after 渐进模糊，给列表内容底部加一层柔和透明渐变遮罩 */
+  mask-image: linear-gradient(to bottom, #000 0%, #000 calc(100% - 42px), transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 calc(100% - 42px), transparent 100%);
+  /* 滚动条默认透明：Windows 下即使不滚动也会占一条灰带，太吵。
+     滚动时才由 .listScrolling 显示；轨道宽度固定，出现时不会把内容挤动。 */
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background-color: transparent;
+  }
+}
+
+/* 滚动中（含滚动后的短暂停留）才显示滑块 */
+.listScrolling {
+  scrollbar-color: var(--scroll-color) transparent;
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--scroll-color);
+  }
+
+  &:hover {
+    scrollbar-color: var(--scroll-color-hover) transparent;
+
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--scroll-color-hover);
+    }
+  }
+}
+
+.section {
+  position: relative;
+  margin-top: 16px;
+  padding-top: 4px;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+.sectionHeader {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding: 2px 10px;
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 500;
+  color: var(--dsw-alias-label-tertiary);
+  background-color: var(--dsw-specific-sidebar-fill);
+  user-select: none;
+}
+
+/* 访客行：未登录时的额度提示与登录入口，紧贴在设置按钮上方 */
+.guest {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-shrink: 0;
+  padding: 10px 2px 10px 6px;
+}
+
+.guestText {
+  min-width: 0;
+}
+
+.guestTitle {
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 500;
+  color: var(--dsw-alias-label-primary);
+}
+
+.guestHint {
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 18px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--dsw-alias-label-tertiary);
+}
+
+.bottom {
+  display: flex;
+  flex-shrink: 0;
+  height: 64px;
+}
+
+/* 访客行出现时底部设置栏不需要那么高，整体留白更均匀 */
+.guest + .bottom {
+  height: 48px;
+}
+
+.bottomSelectMode {
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  height: auto;
+  padding: 10px 0 12px;
+}
+
+/* 管理员头像与用户名触发区 */
+.profileTrigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-sizing: border-box;
+  width: 100%;
+  margin-block: auto;
+  padding: 7px 8px;
+  border: none;
+  border-radius: 12px;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+  transition: background-color 0.16s ease;
+
+  &:hover,
+  &.profileTriggerOpen {
+    background-color: var(--dsw-specific-sidebar-nav-item-hover);
+  }
+
+  &:focus-visible {
+    box-shadow: inset 0 0 0 2px var(--dsw-alias-button-primary-fill);
+  }
+}
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--dsw-static-blue-500), var(--dsw-static-blue-400));
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  box-shadow: 0 2px 6px rgba(57, 100, 254, 0.24);
+}
+
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* 自定义头像使用图片真实背景，不叠加默认蓝色渐变底色与投影 */
+.avatarCustom {
+  background: transparent;
+  box-shadow: none;
+}
+
+.avatarSm {
+  width: 28px;
+  height: 28px;
+  font-size: 12px;
+}
+
+.profileInfo {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.profileName {
+  overflow: hidden;
+  font-size: 14px;
+  line-height: 19px;
+  font-weight: 500;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--dsw-alias-label-primary);
+}
+
+.profileRole {
+  font-size: 11.5px;
+  line-height: 16px;
+  color: var(--dsw-alias-label-tertiary);
+}
+
+.profileMore {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  color: var(--dsw-alias-label-tertiary);
+  transition: color 0.16s ease;
+
+  .profileTrigger:hover &,
+  .profileTriggerOpen & {
+    color: var(--dsw-alias-label-primary);
+  }
+}
+
+/* 点击头像区域后在上方弹出的卡片菜单 */
+.profileCard {
+  position: fixed;
+  z-index: 900;
+  box-sizing: border-box;
+  width: 237px;
+  padding: 6px;
+  border-radius: 16px;
+  border: 1px solid var(--dsw-alias-border-l2);
+  background-color: var(--dsw-specific-menu);
+  box-shadow:
+    0 0 1px rgba(0, 0, 0, 0.18),
+    0 8px 28px rgba(0, 0, 0, 0.12);
+  animation: profileCardIn 0.14s var(--ds-ease-in-out);
+  transform-origin: bottom left;
+}
+
+@keyframes profileCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.profileCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px 8px;
+}
+
+.profileCardIdentity {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  flex: 1;
+}
+
+.profileCardName {
+  overflow: hidden;
+  font-size: 13.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--dsw-alias-label-primary);
+}
+
+.profileCardBadge {
+  flex-shrink: 0;
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 500;
+  color: var(--dsw-alias-brand-text);
+  background-color: var(--dsw-alias-button-ghost-active-fill);
+}
+
+.profileDivider {
+  height: 1px;
+  margin: 4px 6px;
+  background-color: var(--dsw-alias-border-l1);
+}
+
+.profileOption {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 10px;
+  background: none;
+  font: inherit;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--dsw-alias-label-primary);
+  text-align: left;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background-color: var(--dsw-alias-interactive-bg-hover);
+  }
+}
+
+.profileOptionIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.profileOptionDanger {
+  color: var(--dsw-alias-state-error-primary);
+
+  .profileOptionIcon {
+    color: var(--dsw-alias-state-error-primary);
+  }
+
+  &:hover {
+    background-color: var(--dsw-alias-interactive-bg-hover-danger);
+  }
+}
+
+.selectionInfo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 4px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--dsw-alias-label-tertiary);
+  user-select: none;
+}
+
+.selectAll {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--dsw-alias-brand-primary);
+  font: inherit;
+  font-size: 12px;
+  line-height: 18px;
+  cursor: pointer;
+  outline: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.selectionActions {
+  display: flex;
+  gap: 6px;
+
+  > * {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+.settings {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  margin-block: auto;
+  padding: 6px 2px 6px 6px;
+  border: none;
+  border-radius: 12px;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+
+  &:hover {
+    background-color: var(--dsw-specific-sidebar-nav-item-hover);
+  }
+
+  &:focus-visible {
+    box-shadow: inset 0 0 0 2px var(--dsw-alias-button-primary-fill);
+  }
+}
+
+.settingsIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  color: var(--dsw-alias-label-primary);
+}
+
+.settingsLabel {
+  min-width: 0;
+  margin-left: 4px;
+  overflow: hidden;
+  font-size: 14px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--dsw-alias-label-primary);
+}
+
+.collapsed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 12px 0 0 16px;
+  animation: collapsedEnter 0.24s var(--ds-ease-in-out);
+}
+
+/* 收起后仍然保留品牌标识：点击图标即展开侧边栏 */
+.collapsedBrand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 40px;
+  padding: 0 10px;
+  border: none;
+  border-radius: 100px;
+  background: none;
+  cursor: pointer;
+  outline: none;
+  transition: background-color var(--ds-transition-duration) var(--ds-ease-in-out);
+
+  &:hover {
+    background-color: var(--dsw-specific-sidebar-nav-item-hover);
+  }
+
+  &:focus-visible {
+    box-shadow: inset 0 0 0 2px var(--dsw-alias-button-primary-fill);
+  }
+}
+
+.collapsedGroup {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 40px;
+  padding: 0 2px;
+  box-sizing: border-box;
+  border-radius: 100px;
+  border: 1px solid var(--dsw-alias-border-l2);
+  background: var(--dsw-alias-bg-layer-3);
+}
+
+/* 收起后出现的按钮组：淡入并轻微右移，和侧边栏收起的动画连在一起 */
+@keyframes collapsedEnter {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .collapsed {
+    animation: none;
+  }
+}
+
+.drawer {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 800;
+}
+
+.drawerMask {
+  position: absolute;
+  inset: 0;
+  z-index: 799;
+}
+
+.mobile {
+  width: 300px;
+  max-width: calc(100vw - 48px);
+
+  .listWrap {
+    margin-top: 16px;
+  }
+
+  .sectionHeader {
+    padding: 4px 10px 3px;
+    font-size: 14px;
+    line-height: 22px;
+  }
+
+  .bottom {
+    height: auto;
+    padding: 12px 0;
+  }
+
+  .settings {
+    padding: 9px 10px;
+  }
+
+  .settingsIcon {
+    width: auto;
+    height: auto;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .settingsLabel {
+    margin-left: 10px;
+    font-size: 16px;
+    line-height: 22px;
+  }
+}
